@@ -1,0 +1,65 @@
+logging: 
+  level: 
+    root: info
+    com.lankydan.service: debug
+  path: logs
+  file: ${logging.path}/log.log
+  pattern: 
+    file:%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
+    console:%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n
+    
+spring: 
+  profiles: 
+    active: stage
+---
+spring: 
+  profiles: mock
+  activemq:
+    brokerUrl: tcp://localhost:61616 #This port is up and running
+    user: admin
+    password: admin
+    pool: 
+      enabled: false
+      create-connection-on-startup: true # Whether to create a connection on startup. Can be used to warm up the pool on startup.
+      configuration: 
+        max-connections: 10
+#To keep the main thread blocked so that Camel stays up,
+camel.springboot.main-run-controller: true
+#route definitions
+routeIn: direct:input
+routeOut: mock:output
+
+---
+spring: 
+  profiles: dev
+#To keep the main thread blocked so that Camel stays up,
+camel.springboot.main-run-controller: true
+#route definitions
+routeIn: activemq:foo
+routeOut: activemq:testQueue
+activemq:
+    brokerUrl: tcp://localhost:61616 #This port is up and running
+    user: admin
+    password: admin
+    pool: 
+      enabled: false
+      create-connection-on-startup: true # Whether to create a connection on startup. Can be used to warm up the pool on startup.
+      configuration: 
+        max-connections: 10
+---
+spring: 
+  profiles: stage
+#To keep the main thread blocked so that Camel stays up,
+camel.springboot.main-run-controller: true
+#route definitions
+routeIn: activemq:testQueue
+routeOut: activemq:foo
+activemq:
+    brokerUrl: tcp://localhost:61616 #This port is up and running
+    user: admin
+    password: admin
+    pool: 
+      enabled: false
+      create-connection-on-startup: true # Whether to create a connection on startup. Can be used to warm up the pool on startup.
+      configuration: 
+        max-connections: 10

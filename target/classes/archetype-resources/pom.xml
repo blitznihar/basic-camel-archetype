@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<packaging>jar</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+   		<maven.compiler.target>1.8</maven.compiler.target>
+		<springboot.version>2.0.4.RELEASE</springboot.version>
+		<camelspring.version>2.22.0</camelspring.version>
+		<slf4j.version>1.6.1</slf4j.version>
+		<commonsio.version>1.3.2</commonsio.version>
+		<activemqcamel.version>5.6.0</activemqcamel.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<!-- camel-spring-boot jar comes with the spring.factories file, so as 
+				soon as you add that dependency into your classpath, Spring Boot will automatically 
+				auto-configure Camel for you -->
+			<artifactId>camel-spring-boot-starter</artifactId>
+			<version>${camelspring.version}</version>
+		</dependency>
+
+		<!-- Apache ActiveMQ Configurations START -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+			<version>${springboot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId>
+					<artifactId>activemq-broker</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-camel</artifactId>
+			<version>${activemqcamel.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.activemq</groupId>
+					<artifactId>activemq-broker</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jms</artifactId>
+			<version>${camelspring.version}</version>
+		</dependency>
+		<!-- Apache ActiveMQ Configurations END -->
+
+		<!-- For Unit and Mock Testing -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${springboot.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-test-spring</artifactId>
+			<version>${camelspring.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commonsio.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<!-- provides Spring Boot support in Maven, letting you package executable 
+					jar or war archives and run an application “in-place” Enables mvn package 
+					java -jar target/mymodule-0.0.1-SNAPSHOT.jar Enables mvn spring-boot:run -->
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${springboot.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
